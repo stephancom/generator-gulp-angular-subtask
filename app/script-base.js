@@ -40,7 +40,7 @@ var MyBase = module.exports = generators.NamedBase.extend({
 
     var fileType = this._getFileType('language'),
       templateSrc = fileType + '/' + options['type'] + '.' + fileType,
-      testSrc = /*fileType +*/ 'js/spec/' + options['type'] + '.js',
+      testSrc = fileType + '/spec/' + options['type'] + '.' + fileType,
       templateData = {
         scriptAppName: this.appname,
         scriptClassName: camelCase(this.name),
@@ -48,13 +48,14 @@ var MyBase = module.exports = generators.NamedBase.extend({
       },
       fullPath = 'src/index.html',
       templateDest = this._makeDestination(options['type']), // Create the destination path
-      testDest = 'src/' + this._makeDestination(options['type'], true) + '.spec.js', // + fileType,
-      typedTemplateDest = 'src/' + templateDest + '.' + fileType; // Add to the destination path the file type
+      testDest = this._makeDestination(options['type'], true), // + fileType,
+      typedTemplateDest = 'src/' + templateDest + '.' + fileType, // Add to the destination path the file type
+      typedTestDest = 'src/' + testDest + '.' + fileType;
 
     this.template(templateSrc, typedTemplateDest, templateData); // Create file
     //console.log(this.options['skip-test']);
     if ((typeof options['skipTest'] === 'undefined' || !options['skipTest']) && !this.options['skip-test']) {
-      this.template(testSrc,  testDest, templateData); // Create test
+      this.template(testSrc, typedTestDest, templateData); // Create test
     }
   },
   // Add styles
